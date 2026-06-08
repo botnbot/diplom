@@ -1,11 +1,9 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-
 @csrf_exempt
 def index(request):
-    html_content = '''
-<!DOCTYPE html>
+    html_content = r'''<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -18,18 +16,30 @@ def index(request):
 <div id="app" class="container mt-4">
     <h1>📊 Таблица маршрутов</h1>
 
-    <div class="row mb-3">
+    <div class="row mb-3 g-2 align-items-end">
         <div class="col-md-3">
-            <input type="text" class="form-control" v-model="filterName" placeholder="Фильтр по названию" @keyup="applyFilter">
+            <label class="form-label">Колонка</label>
+            <select class="form-select" v-model="filterColumn">
+                <option value="name">Название</option>
+                <option value="quantity">Количество</option>
+                <option value="distance">Расстояние</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Условие</label>
+            <select class="form-select" v-model="filterOperator">
+                <option v-for="op in operatorsForColumn" :value="op.value">{{ op.text }}</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Значение</label>
+            <input type="text" class="form-control" v-model="filterValue" @keyup.enter="applyFilter">
         </div>
         <div class="col-md-2">
-            <input type="number" class="form-control" v-model="filterQuantityMin" placeholder="Кол-во от" @keyup="applyFilter">
+            <button class="btn btn-primary w-100" @click="applyFilter">Применить</button>
         </div>
-        <div class="col-md-2">
-            <input type="number" class="form-control" v-model="filterQuantityMax" placeholder="Кол-во до" @keyup="applyFilter">
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-secondary" @click="clearFilters">Сбросить</button>
+        <div class="col-md-1">
+            <button class="btn btn-secondary w-100" @click="clearFilters">Сбросить</button>
         </div>
     </div>
 
@@ -46,7 +56,7 @@ def index(request):
             <tr v-for="item in items" :key="item.id">
                 <td>{{ item.date }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.quantity }}</td>
+                <td>{{ item.quantity }}<td>
                 <td>{{ item.distance }}</td>
             </tr>
             <tr v-if="items.length === 0">
@@ -78,39 +88,60 @@ new Vue({
         totalItems: 0,
         sortByField: '',
         sortOrder: 'asc',
-        filterName: '',
-        filterQuantityMin: '',
-        filterQuantityMax: ''
+        filterColumn: 'name',
+        filterOperator: 'contains',
+        filterValue: '',
+        operatorsMap: {
+            name: [
+                { value: 'contains', text: 'содержит' },
+                { value: 'exact', text: 'равно' }
+            ],
+            quantity: [
+                { value: 'exact', text: 'равно' },
+                { value: 'gt', text: 'больше' },
+                { value: 'lt', text: 'меньше' }
+            ],
+            distance: [
+                { value: 'exact', text: 'равно' },
+                { value: 'gt', text: 'больше' },
+                { value: 'lt', text: 'меньше' }
+            ]
+        }
+    },
+    computed: {
+        operatorsForColumn() {
+            return this.operatorsMap[this.filterColumn] || [];
+        }
+    },
+    watch: {
+        filterColumn() {
+            const ops = this.operatorsForColumn;
+            if (ops.length) this.filterOperator = ops[0].value;
+            this.applyFilter();
+        },
+        filterOperator() {
+            this.applyFilter();
+        }
     },
     mounted() {
         this.loadData();
     },
     methods: {
         loadData() {
-            let params = new URLSearchParams();
-            params.append('page', this.currentPage);
+            let params = { page: this.currentPage };
 
             if (this.sortByField) {
-                params.append('ordering', this.sortOrder === 'asc' ? this.sortByField : `-${this.sortByField}`);
+                params.ordering = this.sortOrder === 'asc' ? this.sortByField : `-${this.sortByField}`;
             }
 
-            if (this.filterName && this.filterName.trim() !== '') {
-                params.append('name__contains', this.filterName.trim());
-                console.log('Фильтр значение:', this.filterName.trim());
-            }
-            if (this.filterQuantityMin) {
-                params.append('quantity__gte', this.filterQuantityMin);
-            }
-            if (this.filterQuantityMax) {
-                params.append('quantity__lte', this.filterQuantityMax);
+            if (this.filterValue && this.filterValue.trim() !== '') {
+                const key = `${this.filterColumn}_${this.filterOperator}`;
+                params[key] = this.filterValue.trim();
             }
 
-            let url = `/api/items/?${params.toString()}`;
-            console.log('URL запроса:', url);
-
+            const url = `/api/items/?${new URLSearchParams(params).toString()}`;
             axios.get(url)
                 .then(response => {
-                    console.log('Найдено записей:', response.data.count);
                     this.items = response.data.results;
                     this.totalItems = response.data.count;
                     this.totalPages = Math.ceil(this.totalItems / 10);
@@ -120,7 +151,6 @@ new Vue({
                     alert('Ошибка загрузки: ' + (error.response?.data?.detail || error.message));
                 });
         },
-
         sortBy(field) {
             if (this.sortByField === field) {
                 this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
@@ -131,20 +161,17 @@ new Vue({
             this.currentPage = 1;
             this.loadData();
         },
-
         applyFilter() {
             this.currentPage = 1;
             this.loadData();
         },
-
         clearFilters() {
-            this.filterName = '';
-            this.filterQuantityMin = '';
-            this.filterQuantityMax = '';
+            this.filterColumn = 'name';
+            this.filterOperator = 'contains';
+            this.filterValue = '';
             this.currentPage = 1;
             this.loadData();
         },
-
         changePage(page) {
             if (page < 1 || page > this.totalPages) return;
             this.currentPage = page;
@@ -154,6 +181,5 @@ new Vue({
 });
 </script>
 </body>
-</html>
-    '''
+</html>'''
     return HttpResponse(html_content)
