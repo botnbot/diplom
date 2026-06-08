@@ -74,13 +74,13 @@ class ItemsAPITestCase(TestCase):
 
     def test_filter_by_name(self):
         """Тест фильтрации по названию"""
-        response = self.client.get('/api/items/?name=Тестовый маршрут')
+        response = self.client.get('/api/items/?name_contains=Тестовый маршрут')
         self.assertEqual(response.data['count'], 1)
         self.assertEqual(response.data['results'][0]['name'], 'Тестовый маршрут')
 
     def test_filter_by_quantity_min(self):
         """Тест фильтрации по минимальному количеству"""
-        response = self.client.get('/api/items/?quantity__gte=100')
+        response = self.client.get('/api/items/?quantity_gt=99')
         self.assertEqual(response.data['count'], 2)
 
     def test_ordering_by_name(self):
