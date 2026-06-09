@@ -123,6 +123,8 @@ new Vue({
     },
     methods: {
         loadData() {
+         console.log('loadData started');
+         let params = { page: this.currentPage };
             let params = { page: this.currentPage };
 
             if (this.sortByField) {
@@ -135,8 +137,11 @@ new Vue({
             }
 
             const url = `/api/items/?${new URLSearchParams(params).toString()}`;
-            axios.get(url)
-                .then(response => {
+    console.log('Request URL:', url);
+     axios.get(url)
+        .then(response => {
+            console.log('Data received:', response.data);
+            this.items = response.data.results;
                     this.items = response.data.results;
                     this.totalItems = response.data.count;
                     this.totalPages = Math.ceil(this.totalItems / 10);
