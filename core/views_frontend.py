@@ -11,7 +11,21 @@ def index(request):
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
+    <style>
+    .table {
+        width: 100%;
+    }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table td:nth-child(4) {
+        white-space: nowrap;
+    }
+</style>
+    .table td:last-child, .table th:last-child {
+        display: none !important;
+    }
 <body>
 <div id="app" class="container mt-4">
     <h1>📊 Таблица маршрутов</h1>
@@ -53,16 +67,16 @@ def index(request):
             </tr>
         </thead>
         <tbody>
-            <tr v-for="item in items" :key="item.id">
-                <td>{{ item.date }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.quantity }}<td>
-                <td>{{ item.distance }}</td>
-            </tr>
-            <tr v-if="items.length === 0">
-                <td colspan="4" class="text-center">Нет данных</td>
-            </tr>
-        </tbody>
+    <tr v-for="item in items" :key="item.id">
+        <td>{{ item.date }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ Number(item.distance).toFixed(2) }}</td>
+    </tr>
+    <tr v-if="items.length === 0">
+        <td colspan="4" class="text-center">Нет данных</td>
+    </tr>
+</tbody>
     </table>
 
     <nav>
