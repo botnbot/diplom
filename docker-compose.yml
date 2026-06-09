@@ -18,6 +18,7 @@ services:
       POSTGRES_DB: skorodb
       POSTGRES_USER: skoro
       POSTGRES_PASSWORD: skoropassword
+      POSTGRES_HOST: db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

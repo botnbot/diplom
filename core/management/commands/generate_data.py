@@ -18,7 +18,7 @@ class Command(BaseCommand):
         needed = 50 - count
         self.stdout.write(f'Добавляем {needed} новых записей...')
 
-        names = ['Маршрут А', 'Маршрут Б', 'Маршрут В', 'Маршрут Г', 'Маршрут Д']
+        names = ['A', 'B', 'C', 'D', 'E']
 
         for i in range(needed):
             Items.objects.create(
