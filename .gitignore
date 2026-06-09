@@ -115,10 +115,10 @@ dmypy.json
 
 cython_debug/
 
- .idea/
+.idea/
 
 
- .vscode/
+.vscode/
  Temporary file for partial code execution
 tempCodeRunnerFile.py
 
