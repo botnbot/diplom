@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
 from .models import Items
 from .serializers import ItemsSerializer
-from .filters import ItemsFilter   # важно!
+from .filters import ItemsFilter
 
 class ItemsViewSet(viewsets.ModelViewSet):
     queryset = Items.objects.all()
