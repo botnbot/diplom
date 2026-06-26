@@ -23,7 +23,6 @@ urlpatterns = [
     path('health/', health_check),
     path('admin/', admin.site.urls),
     path('', index, name='index'),
-    path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
