@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.contrib import admin
 from django.urls import path, include
 from core.views_frontend import index
@@ -15,7 +16,12 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+def health_check(request):
+    return HttpResponse("OK")
+
 urlpatterns = [
+    path('health/', health_check),
+    path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
