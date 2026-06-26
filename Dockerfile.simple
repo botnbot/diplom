@@ -10,17 +10,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Увеличиваем таймаут для pip
+RUN pip install --no-cache-dir --default-timeout=100 -r requirements.txt
 
 # Установка coverage для отчётов по тестам
-RUN pip install coverage
+RUN pip install coverage --default-timeout=100
 
 # Создание конфигурации coverage
 RUN echo "[run]\nsource = .\nomit = */tests/*, */migrations/*, */admin.py" > .coveragerc
 
 COPY . .
-
-# RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 

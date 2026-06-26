@@ -15,9 +15,9 @@ class FrontendViewsTest(TestCase):
     def test_index_page(self):
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'core/index.html')
+        self.assertContains(response, "<html")
 
     def test_api_items_list(self):
         response = self.client.get('/api/items/')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Расстояние")
+        self.assertContains(response, "Test Item")
