@@ -12,6 +12,12 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Установка coverage для отчётов по тестам
+RUN pip install coverage
+
+# Создание конфигурации coverage
+RUN echo "[run]\nsource = .\nomit = */tests/*, */migrations/*, */admin.py" > .coveragerc
+
 COPY . .
 
 # RUN python manage.py collectstatic --noinput
