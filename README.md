@@ -100,22 +100,24 @@ DyplomProject/
 │   ├── models.py        # Модели данных
 │   ├── views.py         # API views
 │   ├── serializers.py   # DRF сериализаторы
-│   └── urls.py          # Маршруты
+│   ├── urls.py          # Маршруты
+│   ├── views_.py        # бэкенд API
+│   └ views_frontend.py  # фронтенд SPA
 ├── templates/
 │           └─index.html # Главная страница с Vue.js
 ├──.env                  # Переменные окружения
 ├── env.example          # Шаблон переменных окружения
+├──.gitignore            # Содержит список файлов и папок, которые не должны попадать в репозиторий
 ├── docker-compose.yml   # Docker Compose конфигурация
 ├── Dockerfile.simple    # Dockerfile для сборки
-├── manage.py
+├── manage.py            # Управление проектом
 ├── nginx.conf           # Конфигурация Nginx         
-├── pyproject.toml
-├── README.md
-└──  
+├── poetry.lock          # Фиксация зависимостей Poetry        
+├── pyproject.toml       # Зависимости из Poetry
+├── README.md            # Описание и инструкции
+└── requirements.txt     # Файл с зависимостями
 
----
 
-**README.md обновлён и готов!** 🚀
 ```
 Автор
 [skoro@smn35.com]
