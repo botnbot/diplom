@@ -25,8 +25,6 @@ Tаблицa в формате Single Page Application (SPA), которая о�
 ```bash
 git clone https://github.com/botnbot/diplom.git
 cd diplom
-
-poetry install
 ```
 ## 2. Установка зависимостей
 ``` bash
@@ -71,13 +69,13 @@ poetry run python manage.py createsuperuser
 poetry run python manage.py runserver
 ```
 ## 9. Доступ к приложению
-Таблица: http://127.0.0.1:8000/
+Таблица: http://127.0.0.1:8001/
 
-API: http://127.0.0.1:8000/api/items/
+API: http://127.0.0.1:8001/api/items/
 
-Админка: http://127.0.0.1:8000/admin/
+Админка: http://127.0.0.1:8001/admin/
 
-Swagger: http://127.0.0.1:8000/swagger/
+Swagger: http://127.0.0.1:8001/swagger/
 
 ## 10.Функциональность
 Таблица с 4 колонками: Дата, Название, Количество, Расстояние
@@ -95,7 +93,7 @@ poetry run python manage.py test
 ## Структура проекта
 ```text
 DyplomProject/
-├── config/              # Настройки проекта
+├── config/              # Полная структура настроек Django
 ├── core/                # Основное приложение
 │   ├── migrations/      # Миграции БД
 │   ├── tests/           # Тесты
@@ -103,10 +101,21 @@ DyplomProject/
 │   ├── views.py         # API views
 │   ├── serializers.py   # DRF сериализаторы
 │   └── urls.py          # Маршруты
-├── templates/           # HTML шаблоны
-├── .env                 # Переменные окружения
+├── templates/
+│           └─index.html # Главная страница с Vue.js
+├──.env                  # Переменные окружения
+├── env.example          # Шаблон переменных окружения
+├── docker-compose.yml   # Docker Compose конфигурация
+├── Dockerfile.simple    # Dockerfile для сборки
 ├── manage.py
-└── pyproject.toml
+├── nginx.conf           # Конфигурация Nginx         
+├── pyproject.toml
+├── README.md
+└──  
+
+---
+
+**README.md обновлён и готов!** 🚀
 ```
 Автор
 [skoro@smn35.com]
