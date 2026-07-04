@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +16,6 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -26,10 +26,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "corsheaders",
+    "django_filters",
+    "drf_yasg",
     "core",
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -59,11 +65,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-# Database
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -74,8 +75,6 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -92,10 +91,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = 'Europe/Moscow'
@@ -104,5 +99,18 @@ USE_I18N = True
 
 USE_TZ = True
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATIC_URL = "static/"
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
